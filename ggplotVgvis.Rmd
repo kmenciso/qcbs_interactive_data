@@ -1,0 +1,64 @@
+---
+output:html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(googleVis)
+library(data.table)
+library(reshape)
+setwd("C:/Users/kmenciso/Desktop/QCBS_presentation")
+```
+
+## Static Plot
+
+```{r ggplot_plant, echo=FALSE, fig.width = 7, fig.height = 5, fig.align='left'}
+plant_dt <- data.table(read.csv(file = "plant_data.csv"))
+
+gg_plot <- ggplot(plant_dt, aes(x = plant, y = stem_length, fill = treatment)) +
+  geom_bar(position = "dodge",  stat = "summary", fun.y = "mean") + 
+  ylab("Stem Length (cm)") +
+  xlab("Plant")
+
+gg_plot
+```
+
+## Interactive Plot
+
+```{r gvis_plant, results='asis', echo=FALSE, message=FALSE, warning=FALSE, fig.align='right'}
+plant_dt <- dcast.data.table(data = plant_dt,
+                             formula = plant ~ treatment,
+                             value = "stem_length",
+                             fun.aggregate = mean,
+                             na.rm = T)
+# adding tooltip
+plant_dt[, `:=`(control.html.tooltip = "countries: BR, US, CA, FR",
+                treatment1.html.tooltip = "countries: BR, US, CA, FR",
+                treatment2.html.tooltip = "countries: BR, US, CA, FR",
+                treatment3.html.tooltip = "countries: BR, US, CA, FR")]
+setcolorder(plant_dt,
+            c("plant",
+              "control",
+              "control.html.tooltip",
+              "treatment1",
+              "treatment1.html.tooltip",
+              "treatment2",
+              "treatment2.html.tooltip",
+              "treatment3",
+              "treatment3.html.tooltip"))
+
+gvis_plot <- gvisColumnChart(plant_dt,
+                             x = "plant",
+                             y = names(plant_dt)[-1],
+                             options = list(
+                               width = 700,
+                               height = 550,
+                               vAxes = "[{title: 'Stem Length(cm)'}]",
+                               hAxes = "[{title: 'Plant'}]",
+                               tooltip="{isHtml:'True'}"
+                             ))
+print(gvis_plot)
+```
+
