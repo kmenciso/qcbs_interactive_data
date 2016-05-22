@@ -53,6 +53,16 @@ shinyServer(function(input, output, session) {
     
   })
   
+  # country widget
+  output$country_widget <- renderUI({
+    dt <- data.table(loadData())
+    country_choices <- dt[, unique(as.character(country))]
+    
+    selectInput("country",
+                label = "Country",
+                choices = country_choices)
+  })
+  
   # html data output
   output$data <- renderDataTable({
     input$reload
