@@ -4,7 +4,7 @@
 
 Here you will find the materials used in the presentation. 
 
-Links:
+Below are some useful links:
 
 [Shiny Tutorial] (http://shiny.rstudio.com/tutorial/)
 
