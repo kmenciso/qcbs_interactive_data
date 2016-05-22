@@ -23,9 +23,8 @@ shinyUI(
                textInput("student_name", labelMandatory("Student Name"), ""),
                textInput("plant", labelMandatory("Plant ID")),
                
-               selectInput("country",
-                           label = "Country",
-                           choices = c("US", "BR", "CA", "FR")),
+               # created country widget in server with renderUI
+               uiOutput("country_widget"),
                selectInput("treatment",
                            label = "Treatment",
                            choices = list("Control" = "control",
